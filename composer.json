@@ -13,7 +13,7 @@
         "php": "^8.2",
         "laravel/framework": "^11.0",
         "orchid/platform": "^14.44",
-        "intervention/image": "^3.11"
+        "intervention/image": "^2.7"
     },
     "require-dev": {
         "krok/laravel-pint": "^1.0"

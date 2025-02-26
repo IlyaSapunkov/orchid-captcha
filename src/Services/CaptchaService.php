@@ -6,7 +6,7 @@ namespace IlyaSapunkov\OrchidCaptcha\Services;
 
 use Illuminate\Contracts\Encryption\Encrypter;
 use Illuminate\Support\Facades\Session;
-use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
 
 class CaptchaService
@@ -54,14 +54,12 @@ class CaptchaService
     /**
      * @param $text
      *
-     * @return string
+     * @return Image
      */
-    public function generateCaptchaImage($text): string
+    public function generateCaptchaImage($text): Image
     {
-        $manager = new ImageManager(
-            new Driver()
-        );
-        $image = $manager->create(150, 50);
+        $manager = new ImageManager(['driver' => 'gd']);
+        $image = $manager->canvas(150, 50, '#f0f0f0');
         $image->text($text, 75, 25, function ($font): void {
             $font->file(__DIR__ . '/../../resources/fonts/Arial.ttf');
             $font->size(24);
@@ -70,7 +68,7 @@ class CaptchaService
             $font->valign('middle');
         });
 
-        return $image->encode()->toDataUri();
+        return $image->encode('data-url');
     }
 
     /**
