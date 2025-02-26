@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace IlyaSapunkov\OrchidCaptcha\Providers;
 
+use Illuminate\Contracts\Encryption\Encrypter;
 use Illuminate\Support\ServiceProvider;
 use IlyaSapunkov\OrchidCaptcha\Fields\CaptchaInput;
 use IlyaSapunkov\OrchidCaptcha\Services\CaptchaService;
-use Illuminate\Contracts\Encryption\Encrypter;
 use Orchid\Screen\Field;
 
 class CaptchaServiceProvider extends ServiceProvider
@@ -38,5 +38,7 @@ class CaptchaServiceProvider extends ServiceProvider
                 ->name($name)
                 ->title('Введите текст с картинки');
         });
+
+        $this->loadRoutesFrom(__DIR__ . '/../../routes/captcha.php');
     }
 }

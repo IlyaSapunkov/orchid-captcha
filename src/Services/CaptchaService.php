@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace IlyaSapunkov\OrchidCaptcha\Services;
 
-use Illuminate\Support\Facades\Session;
-use Intervention\Image\Image;
-use Intervention\Image\ImageManager;
 use Illuminate\Contracts\Encryption\Encrypter;
+use Illuminate\Support\Facades\Session;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 
 class CaptchaService
 {
-    public function __construct(protected Encrypter $encrypter, protected string $key) {}
+    public function __construct(protected Encrypter $encrypter, protected string $key)
+    {
+    }
 
     /**
      * @return string
@@ -28,12 +30,13 @@ class CaptchaService
 
     /**
      * @param $input
+     *
      * @return bool
      */
     public function validateCaptcha($input): bool
     {
         $encryptedText = Session::get('captcha');
-        if (! $encryptedText) {
+        if (!$encryptedText) {
             return false;
         }
 
@@ -50,12 +53,15 @@ class CaptchaService
 
     /**
      * @param $text
-     * @return Image
+     *
+     * @return string
      */
-    public function generateCaptchaImage($text): Image
+    public function generateCaptchaImage($text): string
     {
-        $manager = new ImageManager(['driver' => 'gd']);
-        $image = $manager->canvas(150, 50, '#f0f0f0');
+        $manager = new ImageManager(
+            new Driver()
+        );
+        $image = $manager->create(150, 50);
         $image->text($text, 75, 25, function ($font): void {
             $font->file(__DIR__ . '/../../resources/fonts/Arial.ttf');
             $font->size(24);
@@ -64,11 +70,12 @@ class CaptchaService
             $font->valign('middle');
         });
 
-        return $image->encode('data-url');
+        return $image->encode()->toDataUri();
     }
 
     /**
      * @param int $length
+     *
      * @return string
      */
     private function generateRandomString(int $length = 5): string

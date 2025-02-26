@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace IlyaSapunkov\OrchidCaptcha\Fields;
 
-use Orchid\Screen\Fields\Input;
 use IlyaSapunkov\OrchidCaptcha\Services\CaptchaService;
+use Orchid\Screen\Fields\Input;
+
 class CaptchaInput extends Input
 {
     /**

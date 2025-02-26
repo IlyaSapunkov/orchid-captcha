@@ -15,6 +15,9 @@
         "orchid/platform": "^14.44",
         "intervention/image": "^3.11"
     },
+    "require-dev": {
+        "krok/laravel-pint": "^1.0"
+    },
     "autoload": {
         "psr-4": {
             "IlyaSapunkov\\OrchidCaptcha\\": "src/"
@@ -26,5 +29,11 @@
                 "IlyaSapunkov\\OrchidCaptcha\\Providers\\CaptchaServiceProvider"
             ]
         }
+    },
+    "scripts": {
+        "pint": "pint --config=vendor/krok/laravel-pint/src/pint.json",
+        "cs": [
+            "@pint"
+        ]
     }
 }
