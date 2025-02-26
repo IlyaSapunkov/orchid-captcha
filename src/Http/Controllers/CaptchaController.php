@@ -13,10 +13,13 @@ class CaptchaController
     /**
      * @param CaptchaService $captchaService
      */
-    public function __construct(protected CaptchaService $captchaService) {}
+    public function __construct(protected CaptchaService $captchaService)
+    {
+    }
 
     /**
      * @param Request $request
+     *
      * @return JsonResponse
      */
     public function validateCaptcha(Request $request): JsonResponse
