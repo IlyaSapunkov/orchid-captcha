@@ -1,0 +1,31 @@
+{
+    "name": "ilyasapunkov/orchid-captcha",
+    "description": "A custom captcha package for Laravel Orchid",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ilya Sapunkov",
+            "email": "Ilya.Sapunkov@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "laravel/framework": "^11.0",
+        "orchid/platform": "^14.44",
+        "illuminate/support": "^9.0",
+        "intervention/image": "^2.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "IlyaSapunkov\\OrchidCaptcha\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "IlyaSapunkov\\OrchidCaptcha\\Providers\\CaptchaServiceProvider"
+            ]
+        }
+    }
+}
