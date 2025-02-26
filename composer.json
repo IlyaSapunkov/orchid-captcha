@@ -13,8 +13,7 @@
         "php": "^8.2",
         "laravel/framework": "^11.0",
         "orchid/platform": "^14.44",
-        "illuminate/support": "^9.0",
-        "intervention/image": "^2.7"
+        "intervention/image": "^3.11"
     },
     "autoload": {
         "psr-4": {
