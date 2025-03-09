@@ -4,53 +4,51 @@ declare(strict_types=1);
 
 namespace IlyaSapunkov\OrchidCaptcha\Fields;
 
+use AllowDynamicProperties;
 use IlyaSapunkov\OrchidCaptcha\Services\CaptchaService;
 use Orchid\Screen\Fields\Input;
+use Random\RandomException;
 
-class CaptchaInput extends Input
+#[AllowDynamicProperties] class CaptchaInput extends Input
 {
     /**
      * @var string
      */
-    protected string $type = 'text';
+    protected $view = 'orchid-captcha::captcha-input';
 
     /**
-     * @param CaptchaService $captchaService
+     * CaptchaManager constructor.
+     *
+     * Initializes the Captcha component by generating a captcha text, hash, and image,
+     * and setting required data like validation URL and CSRF token.
+     *
+     * @throws RandomException
      */
-    public function __construct(protected CaptchaService $captchaService)
+    public function __construct()
     {
         parent::__construct();
-
-        // Генерация капчи
-        $captchaText = $this->captchaService->generateCaptcha();
+        $this->captchaService = app(CaptchaService::class);
+        [$captchaText, $captchaHash] = $this->captchaService->generateCaptcha();
         $captchaImage = $this->captchaService->generateCaptchaImage($captchaText);
 
-        // Установка атрибутов
-        $this->set('captchaImage', $captchaImage);
+        $this->set('captchaHash', $captchaHash);
+        $this->set('captchaImage', $captchaImage->encode('data-url'));
         $this->set('captchaText', $captchaText);
+        $this->set('generateUrl', $this->getGenerateUrl());
         $this->set('validationUrl', $this->getValidationUrl());
         $this->set('csrfToken', $this->getCsrfToken());
     }
 
-    /**
-     * @return mixed
-     */
-    public function render(): mixed
+    protected function getGenerateUrl(): string
     {
-        return view('orchid-captcha::captcha-input', $this->getAttributes());
+        return route('captcha.generate');
     }
 
-    /**
-     * @return string
-     */
     protected function getValidationUrl(): string
     {
         return route('captcha.validate');
     }
 
-    /**
-     * @return string
-     */
     protected function getCsrfToken(): string
     {
         return csrf_token();
