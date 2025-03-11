@@ -4,20 +4,13 @@ declare(strict_types=1);
 
 namespace IlyaSapunkov\OrchidCaptcha\Services;
 
-use AllowDynamicProperties;
-use Exception;
 use Illuminate\Contracts\Encryption\Encrypter;
 use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
 use Random\RandomException;
 
-#[AllowDynamicProperties] class CaptchaService
+class CaptchaService
 {
-    public function __construct()
-    {
-        $this->encrypter = app(Encrypter::class);
-    }
-
     /**
      * Generates a new captcha and its corresponding encrypted hash.
      *
@@ -31,66 +24,12 @@ use Random\RandomException;
      *
      * @throws RandomException
      */
-    public function generateCaptcha(int $length = 5): array
+    public static function generateCaptcha(int $length = 5): array
     {
-        $captchaText = $this->generateRandomString($length);
-        $captchaHash = $this->encrypter->encrypt($captchaText . '|' . time());
+        $captchaText = self::generateRandomString($length);
+        $captchaHash = app(Encrypter::class)->encrypt($captchaText . '|' . time());
 
         return [$captchaText, $captchaHash];
-    }
-
-    /**
-     * Validates the provided captcha input against the decrypted hash.
-     *
-     * @param  string  $input  The user-provided captcha input.
-     * @param  string  $captchaHash  The encrypted string containing the captcha and timestamp.
-     *
-     * @return array Returns an array with a status indicating success or failure,
-     *               and an accompanying error message in case of failure.
-     *
-     * The validation checks include:
-     * - Ensuring the captcha hash is not missing.
-     * - Decrypting and validating the integrity of the captcha hash.
-     * - Ensuring the timestamp in the captcha hash has not expired.
-     * - Verifying that the user-provided captcha input matches the expected value.
-     */
-    public function validateCaptcha(string $input, string $captchaHash): array
-    {
-        if (!$captchaHash) {
-            return [
-                'status' => false,
-                'error' => 'Captcha hash is missing',
-            ];
-        }
-
-        try {
-            $decryptedText = $this->encrypter->decrypt($captchaHash);
-            [$captchaText, $timestamp] = explode('|', $decryptedText);
-        } catch (Exception $e) {
-            return [
-                'status' => false,
-                'error' => 'Invalid captcha hash',
-            ];
-        }
-
-        if (time() - $timestamp > config('captcha.expiration_time')) {
-            return [
-                'status' => false,
-                'error' => 'Captcha has expired',
-            ];
-        }
-
-        if ($input !== $captchaText) {
-            return [
-                'status' => false,
-                'error' => 'Incorrect captcha',
-            ];
-        }
-
-        return [
-            'status' => true,
-            'error' => null,
-        ];
     }
 
     /**
@@ -102,7 +41,7 @@ use Random\RandomException;
      *
      * @throws RandomException
      */
-    public function generateCaptchaImage(string $code): Image
+    public static function generateCaptchaImage(string $code): Image
     {
         $width = 120;
         $height = 50;
@@ -156,7 +95,7 @@ use Random\RandomException;
      *
      * @throws RandomException
      */
-    private function generateRandomString(int $length = 5): string
+    public static function generateRandomString(int $length = 5): string
     {
         $letters = config('captcha.letters');
         $vowels = config('captcha.vowels');

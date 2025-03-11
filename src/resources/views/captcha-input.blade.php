@@ -2,19 +2,14 @@
     <div data-controller="input"
          data-input-mask="{{$mask ?? ''}}"
     >
-        <input {{ $attributes }}>
+        <input {{ $attributes }} >
     </div>
     <input type="hidden"
-           name="{{ $attributes['id'] }}_hash"
+           id="{{ $id }}_hash"
+           name="{{ $name }}_hash"
            value="{{ $captchaHash }}">
     <div>
-        <img id="{{ $attributes['id'] }}_image" src="{{ $captchaImage }}" alt="Captcha">
-        <button type="button" id="{{ $attributes['id'] }}_refresh">Refresh Captcha</button>
+        <img id="{{ $id }}_image" src="{{ $captchaImage }}" alt="Captcha" onclick="refreshCaptcha('{{ $id }}', '{{ $generateUrl }}');">
     </div>
     <script src="{{ asset('vendor/orchid-captcha/js/captcha.js') }}"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            initCaptcha('{{ $attributes['id'] }}', '{{ $generateUrl }}');
-        });
-    </script>
 @endcomponent
