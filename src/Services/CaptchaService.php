@@ -12,27 +12,6 @@ use Random\RandomException;
 class CaptchaService
 {
     /**
-     * Generates a new captcha and its corresponding encrypted hash.
-     *
-     * @param  int  $length  The length of the captcha text to be generated. Default is 5.
-     *
-     * @return array Returns an array containing:
-     *               - The generated random captcha text.
-     *               - The encrypted hash combining the captcha text and the current timestamp.
-     *
-     * The encrypted hash can be used for secure validation of the captcha input later.
-     *
-     * @throws RandomException
-     */
-    public static function generateCaptcha(int $length = 5): array
-    {
-        $captchaText = self::generateRandomString($length);
-        $captchaHash = app(Encrypter::class)->encrypt($captchaText . '|' . time());
-
-        return [$captchaText, $captchaHash];
-    }
-
-    /**
      * Generates a CAPTCHA image based on the provided code.
      *
      * @param  string  $code  The string that the CAPTCHA image will represent.
@@ -48,13 +27,24 @@ class CaptchaService
         $padding = 2;
         $backColor = 0xFFFFFF;
         $foreColor = 0x2040A0;
-        $fontFile = __DIR__ . '/../resources/fonts/SpicyRice.ttf';
+        $fontFile = __DIR__ . '/../../resources/fonts/SpicyRice.ttf';
+
+        $iconColor = 0x808080;
+        $iconSize = 10;
+        $iconFontFile = __DIR__ . '/../../resources/fonts/FontAwesome.ttf';
 
         $length = strlen($code);
         $fontSize = 30;
 
         $manager = new ImageManager(['driver' => 'gd']);
         $image = $manager->canvas($width, $height, '#' . str_pad(dechex($backColor), 6, '0', STR_PAD_LEFT));
+
+        // Draw refresh icon in the top-left corner
+        $image->text('f021', 0, 15, function ($font) use ($iconFontFile, $iconSize, $iconColor): void {
+            $font->file($iconFontFile);
+            $font->size($iconSize);
+            $font->color('#' . str_pad(dechex($iconColor), 6, '0', STR_PAD_LEFT));
+        });
 
         $box = imagettfbbox($fontSize, 0, $fontFile, $code);
         $textWidth = $box[4] - $box[0];
@@ -89,16 +79,15 @@ class CaptchaService
      * The generated string alternates between letters and vowels based on random conditions,
      * creating a mix that adheres to the provided probability rules.
      *
-     * @param  int  $length  Length of the string to be generated. Defaults to 5.
-     *
      * @return string Randomly generated string.
      *
      * @throws RandomException
      */
-    public static function generateRandomString(int $length = 5): string
+    public static function generateRandomString(): string
     {
-        $letters = config('captcha.letters');
-        $vowels = config('captcha.vowels');
+        $length = config('captcha.length', 5);
+        $letters = config('captcha.letters', 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
+        $vowels = config('captcha.vowels', '0123456789');
         $code = '';
         for ($i = 0; $i < $length; $i++) {
             if ($i % 2 && random_int(0, 10) > 2 || !($i % 2) && random_int(0, 10) > 9) {
@@ -109,5 +98,10 @@ class CaptchaService
         }
 
         return $code;
+    }
+
+    public static function getHash(string $text): string
+    {
+        return app(Encrypter::class)->encrypt($text . '|' . time());
     }
 }

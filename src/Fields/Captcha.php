@@ -8,12 +8,12 @@ use IlyaSapunkov\OrchidCaptcha\Services\CaptchaService;
 use Orchid\Screen\Fields\Input;
 use Random\RandomException;
 
-class CaptchaInput extends Input
+class Captcha extends Input
 {
     /**
      * @var string
      */
-    protected $view = 'orchid-captcha::captcha-input';
+    protected $view = 'orchid-captcha::captcha';
 
     /**
      * CaptchaManager constructor.
@@ -26,11 +26,10 @@ class CaptchaInput extends Input
     public function __construct()
     {
         parent::__construct();
-        [$captchaText, $captchaHash] = CaptchaService::generateCaptcha();
-        $captchaImage = CaptchaService::generateCaptchaImage($captchaText);
+        $captchaText = CaptchaService::generateRandomString();
 
-        $this->set('captchaHash', $captchaHash);
-        $this->set('captchaImage', $captchaImage->encode('data-url'));
+        $this->set('captchaHash', CaptchaService::getHash($captchaText));
+        $this->set('captchaImage', CaptchaService::generateCaptchaImage($captchaText)->encode('data-url'));
         $this->set('generateUrl', $this->getGenerateUrl());
         $this->set('validationUrl', $this->getValidationUrl());
         $this->set('csrfToken', $this->getCsrfToken());

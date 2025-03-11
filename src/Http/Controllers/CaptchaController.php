@@ -15,18 +15,17 @@ class CaptchaController
     /**
      * Generates a CAPTCHA image and its corresponding hash for verification.
      *
-     * @param  int  $length  The length of the CAPTCHA text to generate. Defaults to 5.
+     * @return JsonResponse
      *
      * @throws RandomException
      */
-    public function generate(int $length = 5): JsonResponse
+    public function generate(): JsonResponse
     {
-        [$captchaText, $encryptedText] = CaptchaService::generateCaptcha($length);
-        $image = CaptchaService::generateCaptchaImage($captchaText);
+        $captchaText = CaptchaService::generateRandomString();
 
         return response()->json([
-            'captchaImage' => $image->encode('data-url'),
-            'captchaHash' => $encryptedText,
+            'captchaImage' => CaptchaService::generateCaptchaImage($captchaText)->encode('data-url'),
+            'captchaHash' => CaptchaService::getHash($captchaText),
         ]);
     }
 

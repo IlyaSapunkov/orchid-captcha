@@ -44,8 +44,6 @@ class CaptchaRule implements ValidationRule
 
         if (strtolower($value) !== strtolower($captchaText)) {
             $fail(__('captcha.failed'));
-
-            return;
         }
     }
 }

@@ -20,8 +20,12 @@ php artisan vendor:publish --tag=orchid-captcha
 This will publish the following files:
 - Configuration file: config/captcha.php
 - JavaScript file: public/vendor/orchid-captcha/js/captcha.js
-- Blade file: resources/views/vendor/orchid-captcha/captcha-input.blade.php
-- Language files: lang
+- Blade file:
+  - resources/views/vendor/orchid-captcha/captcha-input.blade.php
+  - resources/views/vendor/platform/auth/login.blade.php
+- Language files:
+  - lang/en/captcha.php
+  - lang/ru/captcha.php
 
 Or publish separately:
 ```php
