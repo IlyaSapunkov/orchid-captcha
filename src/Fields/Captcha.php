@@ -26,7 +26,7 @@ class Captcha extends Input
     public function __construct()
     {
         parent::__construct();
-        $captchaText = CaptchaService::generateRandomString();
+        $captchaText = CaptchaService::generateRandomText();
 
         $this->set('captchaHash', CaptchaService::getHash($captchaText));
         $this->set('captchaImage', CaptchaService::generateCaptchaImage($captchaText)->encode('data-url'));

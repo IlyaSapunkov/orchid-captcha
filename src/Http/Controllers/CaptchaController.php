@@ -21,7 +21,7 @@ class CaptchaController
      */
     public function generate(): JsonResponse
     {
-        $captchaText = CaptchaService::generateRandomString();
+        $captchaText = CaptchaService::generateRandomText();
 
         return response()->json([
             'captchaImage' => CaptchaService::generateCaptchaImage($captchaText)->encode('data-url'),
