@@ -165,8 +165,8 @@ class CaptchaService
         $y = round($height * 27 / 40);
 
         for ($i = 0; $i < $length; $i++) {
-            $fontSizeCurrent = (int) (random_int(26, 32) * $scale * 0.8);
-            $angle = random_int(-10, 10);
+            $fontSizeCurrent = (int) (random_int((int) round($fontSize * 0.8), (int) round($fontSize * 1.2)) * $scale * 0.8);
+            $angle = random_int(-config('captcha.angle', 20), config('captcha.angle', 20));
 
             $image->text($code[$i], $x, (int) $y, function ($font) use ($fontFile, $fontSizeCurrent, $foreColor, $angle): void {
                 $font->file($fontFile);

@@ -15,14 +15,14 @@ class CaptchaRule implements ValidationRule
     /**
      * Run the validation rule.
      *
-     * @param  Closure(string, ?string=): PotentiallyTranslatedString  $fail
+     * @param Closure(string, ?string=): PotentiallyTranslatedString $fail
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $captchaHash = request('captcha_hash');
+        $captchaHash = request($attribute . '_hash');
 
         if (!$captchaHash) {
-            $fail(__('captcha.required', ['attribute' => 'captcha_hash']));
+            $fail(__('captcha.required', ['attribute' => $attribute . '_hash']));
 
             return;
         }

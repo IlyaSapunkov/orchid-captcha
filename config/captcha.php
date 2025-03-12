@@ -9,6 +9,7 @@ return [
     'expiration_time' => 60, // in seconds
     'show_in_login_form' => false,
     'use_noise' => true,
+    'angle' => 10, // +- in degrees
     'sizes' => [
         'width' => 120,
         'height' => 50,
