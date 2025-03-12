@@ -24,7 +24,7 @@ class CaptchaController
         $captchaText = CaptchaService::generateRandomText();
 
         return response()->json([
-            'captchaImage' => CaptchaService::generateCaptchaImage($captchaText)->encode('data-url'),
+            'captchaImage' => CaptchaService::generateCaptchaImage($captchaText),
             'captchaHash' => CaptchaService::getHash($captchaText),
         ]);
     }
@@ -39,8 +39,8 @@ class CaptchaController
     public function validate(Request $request): JsonResponse
     {
         $request->validate([
-            'captcha' => ['required|string', new CaptchaRule()],
-            'captcha_hash' => 'required|string',
+            'captcha' => ['required', new CaptchaRule()],
+            'captcha_hash' => 'required',
         ]);
 
         return response()->json();

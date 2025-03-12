@@ -10,7 +10,7 @@ function refreshCaptcha(id, generateUrl) {
     })
         .then(response => response.json())
         .then(data => {
-            captchaImage.src = data.captchaImage.encoded;
+            captchaImage.src = data.captchaImage;
             captchaHashInput.value = data.captchaHash;
             captchaInput.value = '';
         })

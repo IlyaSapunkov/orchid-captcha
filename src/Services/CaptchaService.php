@@ -16,11 +16,11 @@ class CaptchaService
      *
      * @param  string  $text  The string that the CAPTCHA image will represent.
      *
-     * @return Image The generated CAPTCHA image.
+     * @return string The generated CAPTCHA image.
      *
      * @throws RandomException
      */
-    public static function generateCaptchaImage(string $text): Image
+    public static function generateCaptchaImage(string $text): string
     {
         $width = config('captcha.sizes.width', 120);
         $height = config('captcha.sizes.height', 50);
@@ -37,7 +37,7 @@ class CaptchaService
 
         self::renderIcon($image);
 
-        return $image;
+        return $image->encode('data-url')->encoded;
     }
 
     /**

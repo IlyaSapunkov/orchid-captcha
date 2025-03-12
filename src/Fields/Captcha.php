@@ -29,7 +29,7 @@ class Captcha extends Input
         $captchaText = CaptchaService::generateRandomText();
 
         $this->set('captchaHash', CaptchaService::getHash($captchaText));
-        $this->set('captchaImage', CaptchaService::generateCaptchaImage($captchaText)->encode('data-url'));
+        $this->set('captchaImage', CaptchaService::generateCaptchaImage($captchaText));
         $this->set('generateUrl', $this->getGenerateUrl());
         $this->set('validationUrl', $this->getValidationUrl());
         $this->set('csrfToken', $this->getCsrfToken());
