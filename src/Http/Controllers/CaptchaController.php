@@ -24,8 +24,8 @@ class CaptchaController
         $captchaText = CaptchaService::generateRandomText();
 
         return response()->json([
-            'captchaImage' => CaptchaService::generateCaptchaImage($captchaText),
-            'captchaHash' => CaptchaService::getHash($captchaText),
+            'captcha_image' => CaptchaService::generateCaptchaImage($captchaText),
+            'captcha_hash' => CaptchaService::getHash($captchaText),
         ]);
     }
 
